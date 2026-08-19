@@ -1,0 +1,218 @@
+@import "tailwindcss";
+
+@theme {
+  --font-sans: "Pretendard", "Noto Sans SC", "Noto Sans KR", ui-sans-serif, system-ui, sans-serif;
+  --font-display: "ZCOOL KuaiLe", "Jua", "Pretendard", "Noto Sans SC", sans-serif;
+  --font-kr: "Jua", "Pretendard", "Noto Sans KR", sans-serif;
+
+  --color-paper: #fbf3e4;
+  --color-paper-2: #f1e5cf;
+  --color-cream: #fbf3e4;
+  --color-cream-2: #f1e5cf;
+  --color-ink: #3b2b1f;
+  --color-muted: #91755e;
+  --color-coral: #f4513b;
+  --color-coral-dark: #d63c2a;
+  --color-leaf: #5fae67;
+  --color-sun: #f2a93b;
+  --color-sky: #5e9beb;
+  --color-again: #ea5244;
+  --color-hard: #f2a93b;
+  --color-good: #5fae67;
+  --color-easy: #5e9beb;
+  --color-mint: #cdeac9;
+  --color-butter: #ffe49a;
+  --color-pink: #ffd3dd;
+  --color-skyblue: #cde7f8;
+  --color-lilac: #e4d7f6;
+
+  --shadow-sticker: 0 1px 2px rgb(59 43 31 / 0.07), 0 8px 18px rgb(59 43 31 / 0.1);
+  --shadow-pop: 0 2px 4px rgb(59 43 31 / 0.08), 0 16px 32px rgb(59 43 31 / 0.14);
+
+  --animate-paste: paste 0.5s cubic-bezier(0.34, 1.56, 0.64, 1) both;
+  --animate-wobble: wobble 0.45s ease both;
+  --animate-sparkle-pop: sparkle-pop 0.55s ease-out both;
+  --animate-float-slow: float-slow 5s ease-in-out infinite;
+
+  @keyframes paste {
+    0% {
+      transform: translateY(14px) scale(0.86) rotate(-3deg);
+      opacity: 0;
+    }
+    60% {
+      transform: translateY(-2px) scale(1.02) rotate(1deg);
+      opacity: 1;
+    }
+    100% {
+      transform: none;
+      opacity: 1;
+    }
+  }
+
+  @keyframes wobble {
+    0%,
+    100% {
+      transform: translateX(0) rotate(0deg);
+    }
+    20% {
+      transform: translateX(-5px) rotate(-1.5deg);
+    }
+    45% {
+      transform: translateX(4px) rotate(1.2deg);
+    }
+    70% {
+      transform: translateX(-3px) rotate(-0.8deg);
+    }
+  }
+
+  @keyframes sparkle-pop {
+    0% {
+      transform: scale(0) rotate(-30deg);
+      opacity: 0;
+    }
+    60% {
+      transform: scale(1.25) rotate(8deg);
+      opacity: 1;
+    }
+    100% {
+      transform: scale(1) rotate(0deg);
+      opacity: 1;
+    }
+  }
+
+  @keyframes float-slow {
+    0%,
+    100% {
+      transform: translateY(0);
+    }
+    50% {
+      transform: translateY(-5px);
+    }
+  }
+}
+
+html,
+body,
+#root {
+  min-height: 100dvh;
+  margin: 0;
+}
+
+body {
+  font-family: var(--font-sans);
+  color: var(--color-ink);
+  background-color: var(--color-paper);
+  background-image:
+    radial-gradient(rgb(59 43 31 / 0.05) 1.1px, transparent 1.1px),
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='140' height='140'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 0.23 0 0 0 0 0.17 0 0 0 0 0.12 0 0 0 0.05 0'/%3E%3C/filter%3E%3Crect width='140' height='140' filter='url(%23n)'/%3E%3C/svg%3E");
+  background-size:
+    20px 20px,
+    140px 140px;
+  -webkit-tap-highlight-color: transparent;
+}
+
+button,
+a {
+  -webkit-tap-highlight-color: transparent;
+}
+
+::selection {
+  background: rgb(244 81 59 / 0.25);
+}
+
+/* ——— 贴纸手账风基础件 ——— */
+
+/* 白卡贴纸：模切白边 + 柔和贴纸阴影 */
+.sticker-card {
+  position: relative;
+  background: #fffdf8;
+  border: 1px solid rgb(59 43 31 / 0.08);
+  border-radius: 24px;
+  box-shadow: var(--shadow-sticker);
+}
+
+/* 和纸胶带条 */
+.tape {
+  position: absolute;
+  z-index: 3;
+  width: 92px;
+  height: 22px;
+  pointer-events: none;
+  background:
+    repeating-linear-gradient(45deg, rgb(255 255 255 / 0.3) 0 5px, transparent 5px 11px),
+    var(--tape-color, rgb(244 81 59 / 0.42));
+  clip-path: polygon(
+    3px 0,
+    calc(100% - 3px) 0,
+    100% 6px,
+    calc(100% - 3px) 11px,
+    100% 16px,
+    calc(100% - 3px) 100%,
+    3px 100%,
+    0 16px,
+    3px 11px,
+    0 6px
+  );
+  box-shadow: 0 1px 2px rgb(59 43 31 / 0.14);
+}
+
+.tape-coral {
+  --tape-color: rgb(244 81 59 / 0.45);
+}
+.tape-mint {
+  --tape-color: rgb(95 174 103 / 0.42);
+}
+.tape-sky {
+  --tape-color: rgb(94 155 235 / 0.4);
+}
+.tape-butter {
+  --tape-color: rgb(242 169 59 / 0.5);
+}
+.tape-pink {
+  --tape-color: rgb(240 110 150 / 0.4);
+}
+
+/* 可按压的贴纸按钮：底部有"厚度"，按下下沉 */
+.btn-press {
+  box-shadow:
+    inset 0 -4px 0 rgb(59 43 31 / 0.14),
+    var(--shadow-sticker);
+  transition:
+    transform 0.1s ease,
+    box-shadow 0.1s ease,
+    filter 0.15s ease;
+}
+.btn-press:hover {
+  filter: brightness(1.04);
+}
+.btn-press:active {
+  transform: translateY(3px);
+  box-shadow:
+    inset 0 -1px 0 rgb(59 43 31 / 0.14),
+    0 1px 2px rgb(59 43 31 / 0.12);
+}
+
+/* 和纸胶带质感的小标签 */
+.chip-washi {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  border-radius: 6px;
+  padding: 4px 10px;
+  font-size: 12px;
+  font-weight: 600;
+  color: rgb(59 43 31 / 0.78);
+  box-shadow: 0 1px 1.5px rgb(59 43 31 / 0.1);
+}
+
+/* 表单输入：纸面凹槽 */
+.input-paper {
+  background: var(--color-paper-2);
+  border: 1px solid rgb(59 43 31 / 0.1);
+  border-radius: 14px;
+  outline: none;
+  transition: box-shadow 0.15s ease;
+}
+.input-paper:focus {
+  box-shadow: 0 0 0 3px rgb(244 81 59 / 0.22);
+}
