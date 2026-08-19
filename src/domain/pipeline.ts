@@ -52,7 +52,7 @@ export function applyWrong(state: AttemptState): AttemptState {
     mustPickCorrect: true,
     hintLevel: Math.min(4, state.hintLevel + 1),
     step2Need: state.kind === 'new' && state.step <= 2 ? 2 : state.step2Need,
-    extraNeeded: state.kind === 'review' || state.kind === 'extra' ? 2 : state.extraNeeded,
+    extraNeeded: 2,
   }
 }
 
@@ -115,10 +115,11 @@ export function gradeFor(state: AttemptState, card: CardRecord): Grade | null {
   return Rating.Good
 }
 
-export function hintsFor(word: Word, level: number): string[] {
+export function hintsFor(word: Word, level: number, quizType?: QuizType): string[] {
+  const hideExample = quizType === 'example_to_image'
   const layers = [
     word.hanja ? `汉字词：${word.hanja}` : '',
-    word.exampleZh ? `例句：${word.exampleZh}` : '',
+    !hideExample && word.exampleZh ? `例句：${word.exampleZh}` : '',
     word.romanization ? `读音：${word.romanization}` : '',
     `意思：${word.meaningZh}`,
   ].filter(Boolean)

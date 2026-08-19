@@ -1,6 +1,16 @@
 import { localDateKey } from './dates'
 import { isDue, isNewCard } from './srs'
 import type { AppSettings, CardRecord, DailyStat, Word, WordBook } from './types'
+import { builtinWords } from '@/data/catalog'
+
+const BUILTIN_ORDER = new Map(builtinWords.map((word, index) => [word.id, index]))
+
+function compareNewWords(a: Word, b: Word): number {
+  const ao = BUILTIN_ORDER.get(a.id) ?? Number.MAX_SAFE_INTEGER
+  const bo = BUILTIN_ORDER.get(b.id) ?? Number.MAX_SAFE_INTEGER
+  if (ao !== bo) return ao - bo
+  return a.id.localeCompare(b.id)
+}
 
 export interface SessionPick {
   reviews: Word[]
@@ -31,6 +41,7 @@ export function buildSessionQueue(input: {
     if (isNewCard(card)) newWords.push(word)
     else if (card && isDue(card, now)) dueWords.push(word)
   }
+  newWords.sort(compareNewWords)
 
   dueWords.sort((a, b) => {
     const da = input.cards.get(a.id)?.due ?? 0
@@ -41,7 +52,9 @@ export function buildSessionQueue(input: {
   const today = input.today
   const done = (today?.reviews ?? 0) + (today?.newCards ?? 0)
   const remainingGoal = Math.max(0, input.settings.dailyGoal - done)
-  const newLeft = Math.max(0, input.settings.newCardsPerDay - (today?.newCards ?? 0))
+  const newLeft = input.extra
+    ? newWords.length
+    : Math.max(0, input.settings.newCardsPerDay - (today?.newCards ?? 0))
 
   const budget = input.extra ? Math.max(10, remainingGoal || 10) : remainingGoal
   const reviews = dueWords.slice(0, budget)

@@ -1,12 +1,14 @@
-import { Link, useNavigate } from 'react-router-dom'
+import { flushSync } from 'react-dom'
+import { useNavigate } from 'react-router-dom'
 import { patchSettings } from '@/db/database'
 import { DoodleSparkles, DoodleStar } from '@/ui/components/doodles'
 
-export function OnboardingPage() {
+export function OnboardingPage({ onDone }: { onDone?: () => void }) {
   const navigate = useNavigate()
 
   async function finish(skipHangul: boolean) {
     await patchSettings({ onboardingDone: true, hangulSkipped: skipHangul })
+    flushSync(() => onDone?.())
     navigate(skipHangul ? '/' : '/hangul', { replace: true })
   }
 
@@ -60,9 +62,7 @@ export function OnboardingPage() {
         >
           我会字母，直接学单词
         </button>
-        <p className="text-center text-xs text-muted">
-          之后仍可在 <Link to="/hangul" className="text-coral underline decoration-wavy underline-offset-2">字母课</Link> 里复习
-        </p>
+        <p className="text-center text-xs text-muted">之后仍可在「今日」或「我的」里打开字母课复习</p>
       </div>
     </div>
   )

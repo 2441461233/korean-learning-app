@@ -134,7 +134,7 @@ export function StudyPage() {
 
   const enabledTts = settings.ttsEnabled
   const dailyGoal = settings.dailyGoal
-  const hints = attempt ? hintsFor(word, attempt.hintLevel) : []
+  const hints = attempt ? hintsFor(word, attempt.hintLevel, quizTypeFor(attempt)) : []
 
   async function finishWith(state: AttemptState) {
     const existing = cardMapRef.current.get(word.id) ?? emptyCardRecord(word.id)
@@ -228,7 +228,7 @@ export function StudyPage() {
       <div className="mt-3 h-2.5 overflow-hidden rounded-full bg-paper-2">
         <div
           className="h-full rounded-full bg-coral transition-all duration-300"
-          style={{ width: `${total ? (current / total) * 100 : 0}%` }}
+          style={{ width: `${total ? ((current + 1) / total) * 100 : 0}%` }}
         />
       </div>
 

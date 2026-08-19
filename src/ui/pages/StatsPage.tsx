@@ -102,7 +102,7 @@ export function StatsPage() {
               <div className="flex h-24 w-full items-end rounded-full bg-cream">
                 <div
                   className="w-full rounded-full bg-coral"
-                  style={{ height: `${Math.max(8, (day.count / max) * 100)}%` }}
+                  style={{ height: day.count ? `${Math.max(8, (day.count / max) * 100)}%` : '0%' }}
                 />
               </div>
               <div className="text-[10px] text-muted">{day.label}</div>

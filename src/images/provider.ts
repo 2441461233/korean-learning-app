@@ -1,5 +1,6 @@
 import { hashString } from '@/domain/hash'
 import type { Word } from '@/domain/types'
+import { ICON_PALETTE, iconForWord } from './icons'
 
 const THEMES: Record<string, { emoji: string; bg: string; accent: string }> = {
   greetings: { emoji: '👋', bg: '#FFE0D6', accent: '#E14B36' },
@@ -34,14 +35,7 @@ const THEMES: Record<string, { emoji: string; bg: string; accent: string }> = {
   custom: { emoji: '⭐', bg: '#F7EDDC', accent: '#B45C40' },
 }
 
-const GLYPHS = [
-  '👋', '🌸', '🍚', '🍜', '☕', '🍵', '🍞', '🍎', '🚌', '🚇', '✈️', '🏠', '🌙', '☀️',
-  '📚', '✏️', '💼', '👕', '👟', '🎧', '📱', '🔑', '🛏️', '🚿', '💊', '💪', '🐱', '🐶',
-  '🌧️', '❄️', '🌊', '⛰️', '🌳', '🎁', '💰', '🛒', '📷', '🎬', '🎵', '⚽', '🎯', '⏰',
-  '❤️', '😊', '😢', '🔥', '⭐', '🧭', '🗺️', '🚪', '🪟', '🪞', '🧺', '🧼', '🦷', '🧠',
-  '🤝', '👶', '👨', '👩', '🏫', '🏥', '🏦', '🏪', '🏝️', '🚗', '🚲', '🚢', '🎟️', '📦',
-  '🧋', '🛍️', '🌿', '🎨', '🏃', '✨', '📍', '🏙️', '🎭', '📝', '🙂', '🔢',
-]
+const GLYPHS = ICON_PALETTE
 
 export interface WordLook {
   emoji: string
@@ -57,11 +51,11 @@ export function themeVisual(theme: string) {
 }
 
 export function glyphFor(word: Word, offset = 0): string {
-  const palette = [...GLYPHS]
-  const themeEmoji = themeVisual(word.theme).emoji
-  if (!palette.includes(themeEmoji)) palette.unshift(themeEmoji)
-  const idx = (hashString(`${word.hangul}:${word.meaningZh}:${word.id}`) + offset) % palette.length
-  return palette[idx]
+  const canonical = iconForWord(word) ?? themeVisual(word.theme).emoji
+  if (offset <= 0) return canonical
+  const palette = GLYPHS.filter((glyph) => glyph !== canonical)
+  const idx = (hashString(`${word.hangul}:${word.meaningZh}:${word.id}`) + offset) % Math.max(palette.length, 1)
+  return palette[idx] ?? canonical
 }
 
 export function wordVisual(word: Word): WordLook {

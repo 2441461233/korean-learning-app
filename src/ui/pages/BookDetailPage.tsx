@@ -90,6 +90,7 @@ export function BookDetailPage() {
       return
     }
     await db.words.bulkAdd(draftsToWords(id, drafts))
+    setCsvError(`已导入 ${drafts.length} 个词。`)
   }
 
   return (
@@ -127,13 +128,15 @@ export function BookDetailPage() {
           </label>
         </div>
       ) : null}
-      {csvError ? <p className="mt-2 text-sm text-again">{csvError}</p> : null}
+      {csvError ? (
+        <p className={`mt-2 text-sm ${csvError.startsWith('已导入') ? 'text-leaf' : 'text-again'}`}>{csvError}</p>
+      ) : null}
 
       {adding ? (
         <form onSubmit={addWord} className="sticker-card relative mt-4 space-y-2 p-4">
           <span className="tape tape-pink" style={{ top: -11, left: 24, rotate: '-5deg' }} />
-          <Field label="韩语" value={form.hangul} onChange={(v) => setForm({ ...form, hangul: v })} />
-          <Field label="中文" value={form.meaningZh} onChange={(v) => setForm({ ...form, meaningZh: v })} />
+          <Field label="韩语" value={form.hangul} onChange={(v) => setForm({ ...form, hangul: v })} required />
+          <Field label="中文" value={form.meaningZh} onChange={(v) => setForm({ ...form, meaningZh: v })} required />
           <Field label="罗马音" value={form.romanization} onChange={(v) => setForm({ ...form, romanization: v })} />
           <Field label="汉字词" value={form.hanja} onChange={(v) => setForm({ ...form, hanja: v })} />
           <label className="block text-sm">
@@ -177,15 +180,22 @@ function Field({
   label,
   value,
   onChange,
+  required = false,
 }: {
   label: string
   value: string
   onChange: (value: string) => void
+  required?: boolean
 }) {
   return (
     <label className="block text-sm">
       {label}
-      <input value={value} onChange={(e) => onChange(e.target.value)} className="input-paper mt-1 w-full px-3 py-3" />
+      <input
+        value={value}
+        required={required}
+        onChange={(e) => onChange(e.target.value)}
+        className="input-paper mt-1 w-full px-3 py-3"
+      />
     </label>
   )
 }

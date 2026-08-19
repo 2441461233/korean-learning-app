@@ -20,5 +20,5 @@ export function Screen({
   children: ReactNode
   className?: string
 }) {
-  return <div className={`px-5 pb-8 pt-[max(1.2rem,env(safe-area-inset-top))] ${className}`}>{children}</div>
+  return <div className={`px-5 pb-24 pt-[max(1.2rem,env(safe-area-inset-top))] ${className}`}>{children}</div>
 }

@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import { Link } from 'react-router-dom'
 import { draftsToWords, parseWordCsv } from '@/domain/csv'
 import { clearUserProgress, db, exportBackup, importBackup, patchSettings } from '@/db/database'
 import { useSettings } from '@/db/hooks'
@@ -104,6 +105,16 @@ export function SettingsPage() {
             <IconPlus className="h-4 w-4" />
           </button>
         </div>
+      </section>
+
+      <section className="sticker-card mt-3 p-4">
+        <Link to="/hangul" className="flex items-center justify-between">
+          <div>
+            <div className="font-display text-lg">韩文字母课</div>
+            <div className="text-sm text-muted">辅音、元音、拼音节和韵尾</div>
+          </div>
+          <span className="text-sm font-semibold text-coral">打开</span>
+        </Link>
       </section>
 
       <section className="sticker-card mt-3 p-4" style={{ rotate: '-0.4deg' }}>

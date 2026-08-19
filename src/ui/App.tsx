@@ -1,3 +1,4 @@
+import { useState } from 'react'
 import { BrowserRouter, Navigate, Route, Routes } from 'react-router-dom'
 import { useSettings } from '@/db/hooks'
 import { AppShell } from '@/ui/layout/AppShell'
@@ -28,14 +29,25 @@ function Splash() {
 
 export default function App() {
   const settings = useSettings()
+  const [onboardingUnlocked, setOnboardingUnlocked] = useState(false)
   if (settings === undefined) return <Splash />
+  const onboardingDone = settings.onboardingDone || onboardingUnlocked
 
   return (
     <BrowserRouter basename={import.meta.env.BASE_URL.replace(/\/$/, '')}>
       <Routes>
-        <Route path="/welcome" element={<OnboardingPage />} />
-        <Route path="/study" element={settings.onboardingDone ? <StudyPage /> : <Navigate to="/welcome" replace />} />
-        <Route element={settings.onboardingDone ? <AppShell /> : <Navigate to="/welcome" replace />}>
+        <Route
+          path="/welcome"
+          element={
+            onboardingDone && !onboardingUnlocked ? (
+              <Navigate to="/" replace />
+            ) : (
+              <OnboardingPage onDone={() => setOnboardingUnlocked(true)} />
+            )
+          }
+        />
+        <Route path="/study" element={onboardingDone ? <StudyPage /> : <Navigate to="/welcome" replace />} />
+        <Route element={onboardingDone ? <AppShell /> : <Navigate to="/welcome" replace />}>
           <Route path="/" element={<HomePage />} />
           <Route path="/hangul" element={<HangulIndexPage />} />
           <Route path="/hangul/:lessonId" element={<HangulLessonPage />} />
@@ -45,7 +57,7 @@ export default function App() {
           <Route path="/stats" element={<StatsPage />} />
           <Route path="/settings" element={<SettingsPage />} />
         </Route>
-        <Route path="*" element={<Navigate to={settings.onboardingDone ? '/' : '/welcome'} replace />} />
+        <Route path="*" element={<Navigate to={onboardingDone ? '/' : '/welcome'} replace />} />
       </Routes>
     </BrowserRouter>
   )

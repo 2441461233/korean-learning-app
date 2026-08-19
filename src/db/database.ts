@@ -141,11 +141,10 @@ export async function importBackup(text: string): Promise<void> {
 }
 
 export async function clearUserProgress(): Promise<void> {
-  await db.transaction('rw', [db.cards, db.reviews, db.hangulProgress, db.dailyStats, db.settings], async () => {
+  await db.transaction('rw', [db.cards, db.reviews, db.hangulProgress, db.dailyStats], async () => {
     await db.cards.clear()
     await db.reviews.clear()
     await db.hangulProgress.clear()
     await db.dailyStats.clear()
-    await db.settings.put({ ...DEFAULT_SETTINGS, onboardingDone: false })
   })
 }

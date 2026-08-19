@@ -92,7 +92,11 @@ export function HomePage() {
           <div className="text-sm font-semibold">还没学完字母课</div>
           <div className="mt-1 text-sm text-ink/60">认识韩文再记单词，会轻松很多。</div>
         </Link>
-      ) : null}
+      ) : (
+        <Link to="/hangul" className="mt-4 block text-center text-sm text-muted">
+          复习韩文字母课
+        </Link>
+      )}
 
       {session.queue.length > 0 ? (
         <Link

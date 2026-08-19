@@ -62,7 +62,7 @@ export function buildQuiz(
   salt = 0,
 ): Quiz {
   const options = seededShuffle([word, ...distractors], hashString(`${word.id}:${type}:${salt}`))
-  const looks = uniqueVisuals(options)
+  const looks = uniqueVisuals([word, ...distractors])
 
   if (type === 'example_to_image' || type === 'hangul_to_image') {
     const choices: QuizChoice[] = options.map((item) => {
