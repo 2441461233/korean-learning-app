@@ -3,6 +3,7 @@ import { Link, useNavigate, useParams } from 'react-router-dom'
 import { HANGUL_LESSONS } from '@/data/hangul'
 import { db } from '@/db/database'
 import { speakKorean } from '@/audio/tts'
+import { hangulSpeechText } from '@/audio/speechText'
 import { DoodleSparkles, IconArrowLeft, IconCheck, IconSpeaker, IconX } from '@/ui/components/doodles'
 import { Screen } from '@/ui/layout/AppShell'
 
@@ -63,7 +64,7 @@ export function HangulLessonPage() {
               <button
                 key={letter.char + letter.name}
                 type="button"
-                onClick={() => speakKorean(letter.char.length === 1 ? letter.char : letter.example?.hangul ?? letter.char)}
+                onClick={() => speakKorean(hangulSpeechText(letter))}
                 className="sticker-card w-full p-4 text-left transition-transform hover:-translate-y-0.5"
                 style={{ rotate: `${i % 2 === 0 ? -0.4 : 0.4}deg` }}
               >

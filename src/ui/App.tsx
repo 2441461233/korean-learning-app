@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import { BrowserRouter, Navigate, Route, Routes } from 'react-router-dom'
 import { useSettings } from '@/db/hooks'
+import { SpeechFeedback } from '@/ui/components/SpeechFeedback'
 import { AppShell } from '@/ui/layout/AppShell'
 import { BookDetailPage } from '@/ui/pages/BookDetailPage'
 import { BooksPage } from '@/ui/pages/BooksPage'
@@ -35,6 +36,7 @@ export default function App() {
 
   return (
     <BrowserRouter basename={import.meta.env.BASE_URL.replace(/\/$/, '')}>
+      <SpeechFeedback enabled={settings.ttsEnabled} />
       <Routes>
         <Route
           path="/welcome"

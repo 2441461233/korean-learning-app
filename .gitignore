@@ -11,6 +11,8 @@ node_modules
 dist
 dist-ssr
 *.local
+public/audio/ko/*.part
+src/audio/generated/*.part
 
 # Editor directories and files
 .vscode/*

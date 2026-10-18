@@ -1,14 +1,18 @@
-import { useState } from 'react'
+import { useState, useSyncExternalStore } from 'react'
 import { Link } from 'react-router-dom'
 import { draftsToWords, parseWordCsv } from '@/domain/csv'
 import { clearUserProgress, db, exportBackup, importBackup, patchSettings } from '@/db/database'
 import { useSettings } from '@/db/hooks'
-import { DoodleSquiggle, IconMinus, IconPlus } from '@/ui/components/doodles'
+import { getSpeechStatus, speakKorean, stopSpeech, subscribeSpeech } from '@/audio/tts'
+import { TTS_PREVIEW_TEXT } from '@/audio/speechText'
+import { DoodleSquiggle, IconMinus, IconPlus, IconSpeaker } from '@/ui/components/doodles'
 import { Screen } from '@/ui/layout/AppShell'
 
 export function SettingsPage() {
   const settings = useSettings()
   const [message, setMessage] = useState('')
+  const speech = useSyncExternalStore(subscribeSpeech, getSpeechStatus, getSpeechStatus)
+  const previewActive = speech.state === 'playing' || speech.state === 'loading'
 
   if (!settings) {
     return (
@@ -121,13 +125,18 @@ export function SettingsPage() {
         <div className="flex items-center justify-between">
           <div>
             <div className="font-display text-lg">朗读发音</div>
-            <div className="text-sm text-muted">使用系统韩语语音</div>
+            <div className="text-sm text-muted">自然韩语女声 · SunHi</div>
           </div>
           <button
             type="button"
-            onClick={() => patchSettings({ ttsEnabled: !settings.ttsEnabled })}
+            onClick={() => {
+              stopSpeech()
+              void patchSettings({ ttsEnabled: !settings.ttsEnabled })
+            }}
             className={`h-8 w-14 rounded-full p-1 transition-colors ${settings.ttsEnabled ? 'bg-coral' : 'bg-paper-2'}`}
             aria-label="切换朗读"
+            role="switch"
+            aria-checked={settings.ttsEnabled}
           >
             <span
               className={`block h-6 w-6 rounded-full bg-white shadow-sticker transition-transform ${
@@ -136,6 +145,15 @@ export function SettingsPage() {
             />
           </button>
         </div>
+        <button
+          type="button"
+          onClick={() => previewActive ? stopSpeech() : void speakKorean(TTS_PREVIEW_TEXT)}
+          className="btn-press mt-4 flex w-full items-center justify-center gap-2 rounded-xl bg-butter py-3 font-semibold"
+        >
+          <IconSpeaker className="h-4 w-4" />
+          {previewActive ? '停止试听' : '试听新发音'}
+        </button>
+        <p className="mt-2 text-xs leading-relaxed text-muted">内置词句和字母课使用自然语音；导入词书中未收录的内容使用设备韩语语音。</p>
       </section>
 
       <section className="sticker-card mt-3 p-4">

@@ -13,6 +13,19 @@ export default defineConfig({
     VitePWA({
       registerType: 'autoUpdate',
       includeAssets: ['favicon.svg'],
+      workbox: {
+        // Audio is cached as it is heard, not downloaded with the whole app.
+        runtimeCaching: [{
+          urlPattern: /\/audio\/ko\/[a-f0-9]+\.mp3$/i,
+          handler: 'CacheFirst',
+          options: {
+            cacheName: 'korean-natural-speech-v1',
+            cacheableResponse: { statuses: [200] },
+            expiration: { maxEntries: 400, maxAgeSeconds: 60 * 60 * 24 * 30 },
+            rangeRequests: true,
+          },
+        }],
+      },
       manifest: {
         name: '韩语单词',
         short_name: '韩语单词',
